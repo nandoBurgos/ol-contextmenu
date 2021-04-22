@@ -1,4 +1,5 @@
 import Control from 'ol/control/Control';
+
 import { DEFAULT_OPTIONS, DEFAULT_ITEMS } from './constants';
 import { Internal } from './internal';
 import { Html } from './html';
@@ -16,7 +17,7 @@ export default class Base extends Control {
    */
   constructor(opt_options = {}) {
     assert(
-      typeof opt_options == 'object',
+      typeof opt_options === 'object',
       '@param `opt_options` should be object type!'
     );
 
@@ -79,9 +80,9 @@ export default class Base extends Control {
    * to the end of the menu.
    * @param {Array} arr Array.
    */
-  extend(arr) {
-    assert(Array.isArray(arr), '@param `arr` should be an Array.');
-    arr.forEach(this.push, this);
+  extend(array) {
+    assert(Array.isArray(array), '@param `arr` should be an Array.');
+    array.forEach(this.push, this);
   }
 
   isOpen() {
@@ -104,6 +105,7 @@ export default class Base extends Control {
    */
   pop() {
     const keys = Object.keys(this.Internal.items);
+
     this.Html.removeMenuEntry(keys[keys.length - 1]);
   }
 

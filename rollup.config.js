@@ -1,7 +1,8 @@
 import { readFileSync } from 'fs';
-import nodeResolve from 'rollup-plugin-node-resolve';
-import buble from 'rollup-plugin-buble';
-import commonjs from 'rollup-plugin-commonjs';
+
+import nodeResolve from '@rollup/plugin-node-resolve';
+import buble from '@rollup/plugin-buble';
+import commonjs from '@rollup/plugin-commonjs';
 import includePaths from 'rollup-plugin-includepaths';
 import { eslint } from 'rollup-plugin-eslint';
 import bundleSize from 'rollup-plugin-filesize';
@@ -9,17 +10,19 @@ import { terser } from 'rollup-plugin-terser';
 import sass from 'rollup-plugin-sass';
 import postcss from 'postcss';
 import autoprefixer from 'autoprefixer';
+
 import cssVars from './src/cssVars';
 
 const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
 const external = Object.keys(pkg.dependencies);
+
 external.push('ol/control/Control');
 
 const globals = {
   'ol/control/Control': 'ol.control.Control',
 };
 
-const lintOpts = {
+const lintOptions = {
   // extensions: ['js'],
   exclude: ['**/*.scss'],
   cache: true,
@@ -39,7 +42,7 @@ const banner = `
 `;
 
 const scssVars = Object.keys(cssVars).reduce(
-  (p, k) => `${p}$${k}:${cssVars[k]};`,
+  (acc, curr) => `${acc}$${curr}:${cssVars[curr]};`,
   ''
 );
 
@@ -48,23 +51,23 @@ const processor = (css) =>
     .process(css, { from: undefined })
     .then((result) => banner + result.css);
 
-const sassOpts = { data: scssVars, sourceMap: false };
+const sassOptions = { data: scssVars, sourceMap: false };
 
-const cssMinOpts = {
+const cssMinOptions = {
   processor,
   output: 'dist/ol-contextmenu.min.css',
-  options: { ...sassOpts, outputStyle: 'compressed' },
+  options: { ...sassOptions, outputStyle: 'compressed' },
 };
 
-const cssOpts = {
+const cssOptions = {
   processor,
   output: 'dist/ol-contextmenu.css',
-  options: { ...sassOpts, outputStyle: 'expanded' },
+  options: { ...sassOptions, outputStyle: 'expanded' },
 };
 
 const plugins = [
   includePaths(includePathOptions),
-  eslint(lintOpts),
+  eslint(lintOptions),
   bundleSize(),
   nodeResolve(),
   commonjs(),
@@ -75,6 +78,7 @@ export default [
   {
     external,
     input: './src/base.js',
+
     output: {
       banner,
       globals,
@@ -82,15 +86,17 @@ export default [
       format: 'umd',
       name: 'ContextMenu',
     },
+
     plugins: [
-      sass(cssMinOpts),
+      sass(cssMinOptions),
       ...plugins,
-      terser({ output: { comments: /^!/ } }),
+      terser({ output: { comments: /^!/u } }),
     ],
   },
   {
     external,
     input: './src/base.js',
+
     output: {
       banner,
       globals,
@@ -98,6 +104,7 @@ export default [
       format: 'umd',
       name: 'ContextMenu',
     },
-    plugins: [sass(cssOpts), ...plugins],
+
+    plugins: [sass(cssOptions), ...plugins],
   },
 ];
