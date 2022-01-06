@@ -10,6 +10,37 @@ var view = new ol.View({ center: [0, 0], zoom: 4 }),
 
 var contextmenu_items = [
   {
+    inline: false,
+    items: [
+      {
+        icon: 'img/center.png',
+        callback: function () {
+          alert('hola');
+        },
+      },
+      {
+        icon: 'img/center.png',
+        callback: function () {
+          alert('hola');
+        },
+      },
+      {
+        icon: 'img/center.png',
+        callback: function () {
+          alert('hola');
+        },
+      },
+      {
+        icon: 'img/center.png',
+        callback: function (a, b) {
+          console.log(a);
+          console.log(b);
+          
+        },
+      },
+    ],
+  },
+  {
     text: 'Center map here',
     classname: 'bold',
     icon: 'img/center.png',

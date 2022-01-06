@@ -28,6 +28,19 @@ export class Html {
     return container;
   }
 
+  createInlineContainer(hidden) {
+    const container = document.createElement('div');
+    const ul = document.createElement('ul');
+    ul.style.display = 'block-inline';
+    const klasses = [CSS_VARS.container, CSS_VARS.unselectable];
+
+    hidden && klasses.push(CSS_VARS.hidden);
+    container.className = klasses.join(' ');
+    container.style.width = parseInt(this.Base.options.width, 10) + 'px';
+    container.appendChild(ul);
+    return container;
+  }
+
   createMenu() {
     let items = [];
 
@@ -54,15 +67,20 @@ export class Html {
           : CSS_VARS.submenu;
       }
 
-      let li = this.generateHtmlAndPublish(this.container, item);
-      let sub = this.createContainer();
-      sub.style.left =
-        this.Base.Internal.submenu.lastLeft || this.Base.Internal.submenu.left;
-      li.appendChild(sub);
+      let li,
+        sub = null;
+      if (!item.inline) {
+        li = this.generateHtmlAndPublish(this.container, item);
+        sub = this.createContainer();
+        sub.style.left =
+          this.Base.Internal.submenu.lastLeft ||
+          this.Base.Internal.submenu.left;
+        li.appendChild(sub);
 
-      item.items.forEach((each) => {
-        this.generateHtmlAndPublish(sub, each, true);
-      });
+        item.items.forEach((each) => {
+          this.generateHtmlAndPublish(sub, each, true);
+        });
+      }
     } else {
       this.generateHtmlAndPublish(this.container, item);
     }

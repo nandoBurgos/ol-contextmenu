@@ -48,6 +48,7 @@ export const DEFAULT_ITEMS = [
         center: obj.coordinate,
       });
     },
+    inline: false,
   },
   {
     text: 'Zoom Out',
@@ -60,5 +61,6 @@ export const DEFAULT_ITEMS = [
         center: obj.coordinate,
       });
     },
+    inline: false,
   },
 ];
